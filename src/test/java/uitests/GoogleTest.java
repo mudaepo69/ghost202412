@@ -1,5 +1,6 @@
 package uitests;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.WebDriverRunner;
 import org.openqa.selenium.By;
 import org.testng.annotations.Test;
@@ -30,6 +31,7 @@ public class GoogleTest {
         System.out.println("Current URL: " + url);
         assertThat(url).as("Search result page should have search keyword").contains("q=Selenide");
         googlePage.searchResultLogo.shouldBe(visible);
+        googlePage.searchResultLogo.shouldHave(Condition.appear);
         $("h3").shouldHave(text("Selenide: concise UI tests in Java"));
         $(By.xpath("//h3[contains(text(),'Selenide: concise UI tests in Java')]")).should(be(visible));
 
