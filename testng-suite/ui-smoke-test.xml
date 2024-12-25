@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="XML Suite Name : UI Smoke Tests" verbose="1" configfailurepolicy="continue"  >
+<!--    <listeners>-->
+<!--        <listener class-name="jutils.MyAnnotaionTransformer" />-->
+<!--        <listener class-name="jutils.MyTestListener" />-->
+<!--    </listeners>-->
+    <test name="XML Test Name : UI Smoke Tests" >
+        <classes>
+            <class name="uitests.GoogleTest"/>
+            <class name="uitests.MonsterTest"/>
+            <class name="uitests.SelenideTest"/>
+        </classes>
+    </test>
+</suite>
