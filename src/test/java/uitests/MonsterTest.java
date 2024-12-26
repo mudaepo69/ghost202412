@@ -29,7 +29,7 @@ public class MonsterTest {
         //Configuration.headless = true;
         //Configuration.browserSize = "1920x1080";
         //Configuration.baseUrl = "https://monster.com";
-        Configuration.remote="http://localhost:4444/wd/hub";
+        //Configuration.remote="http://localhost:4444/wd/hub";
 
         open("https://monster.com");
         getWebDriver().manage().window().maximize();
