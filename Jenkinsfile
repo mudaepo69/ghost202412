@@ -1,6 +1,6 @@
 pipeline {
 
-    //agent any - where to execute
+    agent any - where to execute
 
     stage {
         stage("build"){
