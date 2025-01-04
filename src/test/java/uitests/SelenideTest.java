@@ -1,11 +1,12 @@
 package uitests;
 
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.WebDriverRunner;
+import base.BaseTest;
+import com.codeborne.selenide.*;
+import com.codeborne.selenide.testng.TextReport;
+import com.codeborne.selenide.webdriver.WebDriverFactory;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.MonsterPage;
 import pages.SelenidePage;
@@ -13,12 +14,39 @@ import pages.SelenidePage;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
+import java.util.List;
 
+import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class SelenideTest {
+@Listeners({ TextReport.class})
+public class SelenideTest extends BaseTest {
+
+    @Test
+    public void firefoxRemotePageTest() {
+
+        Configuration.browser = "firefox";
+        //Configuration.headless = true;
+        Configuration.browserSize = "1920x1080";
+        Configuration.remote="http://localhost:4444/wd/hub";
+
+        open("https://monster.com");
+        getWebDriver().manage().window().maximize();
+
+        System.out.println("Is Firefox Browser: " + WebDriverRunner.isFirefox());
+        MonsterPage monsterPage = new MonsterPage();
+        //Element list size
+        monsterPage.selectLanguageList.shouldHave(size(19));
+        List<String> currentLanguages = monsterPage.selectLanguageList.texts();
+        System.out.println("List of Language: " + currentLanguages);
+        List<String> currentLanguagesurl = monsterPage.selectLanguageListURL.attributes("href");
+        System.out.println("List of Language URL: " + currentLanguagesurl);
+        monsterPage.searchField.val("Software QA");
+    }
 
     @Test
     public void multiWindowTest() {
@@ -35,7 +63,7 @@ public class SelenideTest {
 
     @Test
     public void webdriverTest() {
-        open("https://google.org/");
+        open("https://google.com/");
         System.out.println("URL: " + WebDriverRunner.url());
         WebDriverRunner.clearBrowserCache();
         System.out.println("getAndCheck: "  + WebDriverRunner.getAndCheckWebDriver());
@@ -43,7 +71,7 @@ public class SelenideTest {
 
     @Test
     public void alertTest() {
-        open("https://google.org/");
+        open("https://google.com/");
         Alert alert = switchTo().alert();
         alert.getText();
         alert.accept();
@@ -52,16 +80,9 @@ public class SelenideTest {
 
     @Test
     public void iframeTest() {
-        open("https://google.org/");
+        open("https://google.com/");
         switchTo().frame($("iframe name"));
         switchTo().defaultContent();
-    }
-
-    @Test
-    public void loginName() throws MalformedURLException {
-        open("https://google.org/", "", "admin", "pass");
-        open(new URL("https://google.org/"), "", "admin", "pass");
-        sleep(5000);
     }
 
     @Test

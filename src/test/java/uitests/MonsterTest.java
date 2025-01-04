@@ -4,7 +4,9 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
+import com.codeborne.selenide.testng.TextReport;
 import org.openqa.selenium.By;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.MonsterPage;
 
@@ -15,6 +17,7 @@ import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Listeners({ TextReport.class})
 public class MonsterTest {
 
 
@@ -46,9 +49,33 @@ public class MonsterTest {
         System.out.println("List of Language Compare: " + containsSubList1);
         monsterPage.selectLanguageList.shouldHave(CollectionCondition.texts(monsterPage.selectLanguageListTexts));
         //monsterPage.selectLanguageMenu.selectOption("Belgium (English)");
-        System.out.println("Select URLe: " + WebDriverRunner.url());
+        System.out.println("Select URL: " + WebDriverRunner.url());
         $(By.partialLinkText("Career")).shouldBe(Condition.visible);
-        sleep(10000);
+    }
+
+    @Test
+    public void monsterHeadlessPageTest() {
+
+        Configuration.headless = true;
+        Configuration.browserSize = "1920x1080";
+
+        open("https://monster.com");
+        getWebDriver().manage().window().maximize();
+        MonsterPage monsterPage = new MonsterPage();
+        //Element list size
+        monsterPage.selectLanguageList.shouldHave(size(19));
+        List<String> currentLanguages = monsterPage.selectLanguageList.texts();
+        System.out.println("List of Language: " + currentLanguages);
+        List<String> currentLanguagesurl = monsterPage.selectLanguageListURL.attributes("href");
+        System.out.println("List of Language URL: " + currentLanguagesurl);
+        monsterPage.searchField.val("Software QA");
+        assertThat(monsterPage.selectLanguageListTexts).as("Compare Supporting Language list").containsExactlyInAnyOrderElementsOf(currentLanguages);
+        boolean containsSubList1 = currentLanguages.containsAll(monsterPage.selectLanguageListTexts);
+        System.out.println("List of Language Compare: " + containsSubList1);
+        monsterPage.selectLanguageList.shouldHave(CollectionCondition.texts(monsterPage.selectLanguageListTexts));
+        //monsterPage.selectLanguageMenu.selectOption("Belgium (English)");
+        System.out.println("Select URL: " + WebDriverRunner.url());
+        $(By.partialLinkText("Career")).shouldBe(Condition.visible);
     }
 
     @Test
